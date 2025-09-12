@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activities.ProfileActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/ib_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingHorizontal="25dp"
+                android:paddingTop="20dp"
+                android:src="@drawable/ic_back"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/ib_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingHorizontal="25dp"
+                android:paddingTop="20dp"
+                android:src="@drawable/ic_delete"
+                android:tint="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="100sp"
+            android:padding="15sp"
+            android:src="@drawable/ic_add_profile"
+            android:tint="?attr/colorPrimary" />
+
+
+        <EditText
+            android:id="@+id/et_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:clickable="true"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:gravity="center"
+            android:hint="@string/et_name_profile"
+            android:padding="10dp"
+            android:textSize="22sp"
+            android:textStyle="bold|italic" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ccc" />
+
+        <TextView
+            android:id="@+id/et_schedule"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingStart="20dp"
+            android:paddingTop="15dp"
+            android:text="@string/tv_schedule"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <include
+            android:id="@+id/card_schedule"
+            layout="@layout/item_card_block" />
+
+        <TextView
+            android:id="@+id/et_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingStart="20dp"
+            android:text="@string/tv_block"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <include
+            android:id="@+id/card_appList"
+            layout="@layout/item_card_block" />
+
+        <include
+            android:id="@+id/card_webBlock"
+            layout="@layout/item_card_block"
+            android:layout_marginTop="5dp"
+            android:layout_marginHorizontal="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mb_save"
+        android:text="@string/mb_save"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cornerRadius="8dp"/>
+
+</LinearLayout>

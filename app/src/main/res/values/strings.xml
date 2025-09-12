@@ -1,0 +1,66 @@
+<resources>
+    <string name="app_name">AppBlocker</string>
+
+    /* Main Activity */
+    <string name="tv_profiles">Profiles</string>
+    <string name="tv_add_profiles">Add new profile</string>
+
+    /* Profile Activity */
+    <string name="et_name_profile">Name...</string>
+
+    <string name="tv_schedule">Schedule</string>
+    <string name="tv_schedule_days">Days: </string>
+    <string name="tv_schedule_hours">Hours: </string>
+
+    <string name="tv_block">Blocks</string>
+    <string name="tv_appList">App List</string>
+    <string name="tv_webBlock">Web Block</string>
+
+    /* App List Activity */
+    <string name="tv_app_list_title">Apps</string>
+
+    /* Schedule Activity */
+    <string name="tv_schedule_title">Schedule</string>
+    <string name="tv_allDay">All Day</string>
+
+    /* Web Block Activity */
+    <string name="tv_web_block_title">Web Block</string>
+    <string name="til_add_webblock">Add new web site...</string>
+    <string name="tv_pages">Pages Blocks</string>
+
+    /* Lock Activity */
+    <string name="tv_lock">This is Lock</string>
+    <string name="b_close">Back to Home</string>
+
+    /* Item Profile */
+    <string name="tv_nombre_profile">Profile Name</string>
+
+    /* Item App */
+    <string name="tv_appname">App Name</string>
+
+    /* Item Web Page */
+    <string name="tv_web_page">Web Page</string>
+
+    /* General */
+    <string name="tv_title">Text View Title</string>
+    <string name="mb_save">Save</string>
+
+    <string name="accessibility_service_description">Description</string>
+
+    <string name="loading">Loading…</string>
+
+    <string name="tv_setting_title_security">Setting Security</string>
+    <string name="tv_setting_description_security">
+        Choose a numeric PIN or password to protect the app.
+    </string>
+    <string name="pin">PIN</string>
+    <string name="pass">Password</string>
+    <string name="pinOrPass">PIN or Password</string>
+    <string name="confirmPinOrPass">Confirm PIN or Password</string>
+
+    <string name="tv_verify_title_security">Security</string>
+    <string name="tv_verify_description_security">Enter your PIN or Password</string>
+    <string name="enterPinOrPass">PIN or Password</string>
+    <string name="mb_verify">Ok</string>
+
+</resources>

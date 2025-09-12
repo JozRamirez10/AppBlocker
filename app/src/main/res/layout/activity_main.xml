@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MainActivity">
+
+    <ImageButton
+        android:id="@+id/ib_settings"
+        android:background="@android:color/transparent"
+        android:layout_marginEnd="20dp"
+        android:paddingTop="20dp"
+        android:src="@drawable/ic_settings"
+        android:tint="?attr/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"/>
+
+    <TextView
+        android:id="@+id/tv_app_name"
+        android:text="@string/app_name"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:src="@drawable/ic_main"
+        android:padding="15sp"
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:tint="?attr/colorPrimary" />
+
+    <LinearLayout
+        android:id="@+id/ly_profiles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/tv_profiles"
+            android:text="@string/tv_profiles"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginStart="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/mbAddProfile"
+            android:text="@string/tv_add_profiles"
+            android:textSize="11sp"
+            app:icon="@drawable/ic_add"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:gravity="center"
+            app:iconGravity="textEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="0dp"
+            android:paddingVertical="0dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:background="#ccc"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:clipToPadding="false"
+        android:padding="15dp"
+        tools:listitem="@layout/item_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_add_profile"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:text="@string/tv_add_profiles"
+        android:textSize="20sp"
+        android:gravity="center"
+        app:icon="@drawable/ic_add"
+        app:iconSize="@android:dimen/app_icon_size"
+        app:iconGravity="textTop"
+        app:iconPadding="8dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+</LinearLayout>
