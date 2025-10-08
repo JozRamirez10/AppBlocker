@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.os.Handler
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
@@ -23,6 +24,7 @@ import com.app.appblocker.data.local.entities.Profile
 import com.app.appblocker.databinding.ActivityProfileBinding
 import com.app.appblocker.databinding.ContentAppListBinding
 import com.app.appblocker.databinding.ContentScheduleBinding
+import com.app.appblocker.databinding.ContentStrictModeBinding
 import com.app.appblocker.databinding.ContentWebBlockBinding
 import com.app.appblocker.enums.DaysOfWeek
 import com.app.appblocker.enums.Destination
@@ -33,6 +35,7 @@ import com.app.appblocker.view_models.AppListViewModel
 import com.app.appblocker.view_models.ProfileViewModel
 import com.app.appblocker.view_models.ScheduleViewModel
 import com.app.appblocker.view_models.WebLinkViewModel
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
@@ -44,6 +47,7 @@ class ProfileActivity : AppCompatActivity() {
     private lateinit var scheduleBinding : ContentScheduleBinding
     private lateinit var appListBinding : ContentAppListBinding
     private lateinit var webBlockBinding : ContentWebBlockBinding
+    private lateinit var strictModeBinding: ContentStrictModeBinding
 
     private val vm : ProfileViewModel by viewModels()
     private val scheduleVm : ScheduleViewModel by viewModels()
@@ -52,6 +56,9 @@ class ProfileActivity : AppCompatActivity() {
 
     private var currentProfile : Profile? = null
     private var isAutoCreated : Boolean = false
+
+    private var countdownHandler : Handler? = null
+    private var countdownRunnable : Runnable? = null
 
     companion object{
         private const val DEFAULT_PROFILE_NAME = "New Profile"
@@ -91,6 +98,9 @@ class ProfileActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val profile = currentProfile ?: return@launch
             if(!profile.isActive) return@launch
+
+            strictModeBinding.switchStrictMode.isEnabled = false
+            binding.mbSave.visibility = View.GONE
 
             val scheduleOk = isScheduleValid(profileId)
             val blockOk = isBlockValid(profileId)
@@ -152,7 +162,14 @@ class ProfileActivity : AppCompatActivity() {
         if(prof == null){
             vm.createProfile(name)
         }else{
-            vm.updateProfile(prof.copy(name = name))
+            var strictModeEnable = false
+            if(strictModeBinding.switchStrictMode.isChecked) {
+                strictModeEnable = true
+            }
+            vm.updateProfile(prof.copy(
+                name = name,
+                isStrictModeEnabled = strictModeEnable
+            ))
         }
         isAutoCreated = false
         Utils.ToasUtils.showToast(
@@ -168,6 +185,7 @@ class ProfileActivity : AppCompatActivity() {
             chargeProfile(profileId)
         }else{
             loadScheduleEmpty()
+            loadStrictModeEmpty()
         }
     }
 
@@ -181,6 +199,7 @@ class ProfileActivity : AppCompatActivity() {
                     loadIconApps(profileId)
                     loadWebLinks(profileId)
                     loadActive(profileId)
+                    loadStrictMode()
                 }
             }
         }
@@ -263,6 +282,53 @@ class ProfileActivity : AppCompatActivity() {
         }
     }
 
+    private fun loadStrictModeEmpty() {
+        strictModeBinding.tvStrictModeTime.text = "..."
+        strictModeBinding.switchStrictMode.isEnabled = false
+    }
+
+    private fun loadStrictMode() {
+        val millis = currentProfile?.strictDurationMillis ?: 0L
+
+        if ( millis > 0) {
+            if(currentProfile?.isActive == true && currentProfile?.strictStartedAt != null && currentProfile?.isStrictModeEnabled == true){
+                startStrictModeCountdown(millis, currentProfile!!.strictStartedAt!!)
+            }else{
+                val time = Utils.ParseUtils.millisToTimeParts(millis)
+                strictModeBinding.tvStrictModeTime.text = "${time.days}d ${time.hours}h ${time.minutes}m ${time.seconds}s"
+                strictModeBinding.switchStrictMode.isEnabled = true
+                if(currentProfile?.isStrictModeEnabled == true){
+                    strictModeBinding.switchStrictMode.isChecked = true
+                }
+            }
+        }else{
+            loadStrictModeEmpty()
+        }
+    }
+
+    private fun startStrictModeCountdown(totalMillis : Long, startedAt : Long){
+        countdownHandler?.removeCallbacks(countdownRunnable ?: return)
+        countdownHandler = Handler(mainLooper)
+
+        countdownRunnable = object : Runnable {
+            override fun run() {
+                val elapsed = System.currentTimeMillis() - startedAt
+                val remaining = totalMillis - elapsed
+
+                if(remaining <= 0){
+                    strictModeBinding.tvStrictModeTime.text = "0d 0h 0m 0s"
+                    countdownHandler?.removeCallbacks(this)
+                }else{
+                    val time = Utils.ParseUtils.millisToTimeParts(remaining)
+                    strictModeBinding.tvStrictModeTime.text =
+                        "${time.days}d ${time.hours}h ${time.minutes}m ${time.seconds}s"
+                    countdownHandler?.postDelayed(this, 1000)
+                }
+            }
+        }
+        countdownHandler?.post(countdownRunnable!!)
+    }
+
     private fun inflateCardContents() {
         scheduleBinding = ContentScheduleBinding.inflate(layoutInflater, binding.cardSchedule.lyItem, true)
         binding.cardSchedule.tvTitle.visibility = View.GONE
@@ -272,6 +338,9 @@ class ProfileActivity : AppCompatActivity() {
 
         webBlockBinding = ContentWebBlockBinding.inflate(layoutInflater, binding.cardWebBlock.lyItem, true)
         binding.cardWebBlock.tvTitle.text = getString(R.string.tv_webBlock)
+
+        strictModeBinding = ContentStrictModeBinding.inflate(layoutInflater, binding.cardStrictMode.lyItem, true)
+        binding.cardStrictMode.tvTitle.visibility = View.GONE
 
         binding.cardSchedule.root.setOnClickListener {
             validateBeforeGo(Destination.SCHEDULE)
@@ -283,6 +352,10 @@ class ProfileActivity : AppCompatActivity() {
 
         binding.cardWebBlock.root.setOnClickListener {
             validateBeforeGo(Destination.WEB_BLOCK)
+        }
+
+        binding.cardStrictMode.root.setOnClickListener {
+            validateBeforeGo(Destination.STRICT_MODE)
         }
     }
 
@@ -305,8 +378,12 @@ class ProfileActivity : AppCompatActivity() {
             Destination.APP_LIST -> Intent(this, AppListActivity::class.java)
             Destination.WEB_BLOCK -> Intent(this, WebBlockActivity::class.java)
             Destination.SCHEDULE -> Intent(this, ScheduleActivity::class.java)
+            Destination.STRICT_MODE -> Intent(this, StrictModeActivity::class.java)
         }
         intent.putExtra("profileId", profileId)
+        if(currentProfile?.isActive == true){
+            intent.putExtra("active", 1)
+        }
         startActivity(intent)
     }
 
@@ -371,5 +448,10 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun closeKeyboard(v : EditText){
         imm.hideSoftInputFromWindow(v.windowToken, 0)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        countdownHandler?.removeCallbacks(countdownRunnable ?: return)
     }
 }

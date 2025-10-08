@@ -12,9 +12,12 @@
     <string name="tv_schedule_days">Days: </string>
     <string name="tv_schedule_hours">Hours: </string>
 
+    <string name="tv_strictMode_time">Days, HH:mm:ss</string>
+
     <string name="tv_block">Blocks</string>
     <string name="tv_appList">App List</string>
     <string name="tv_webBlock">Web Block</string>
+    <string name="tv_strictMode">Strict Mode</string>
 
     /* App List Activity */
     <string name="tv_app_list_title">Apps</string>
@@ -31,6 +34,9 @@
     /* Lock Activity */
     <string name="tv_lock">This is Lock</string>
     <string name="b_close">Back to Home</string>
+
+    /* Stric Mode Activity */
+    <string name="tv_strict_mode_title">Strict Mode</string>
 
     /* Item Profile */
     <string name="tv_nombre_profile">Profile Name</string>

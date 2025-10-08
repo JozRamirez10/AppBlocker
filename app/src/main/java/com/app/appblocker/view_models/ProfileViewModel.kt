@@ -4,9 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.ServiceCompat.startForeground
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.app.appblocker.utils.ActiveProfileManager
 import com.app.appblocker.data.local.entities.Profile
@@ -78,30 +81,48 @@ class ProfileViewModel(
                     return@launch
                 }
 
-                val updated = profile.copy(isActive = true)
-                repo.update(updated)
-                ActiveProfileManager.setActiveProfile(updated)
-
-                val intent = Intent(context, ForegroundService::class.java).apply {
-                    putExtra("PROFILE_NAME", updated.name)
+                if(profile.isStrictModeEnabled){
+                    Utils.DialogUtils.showConfirmDialog(
+                        context = context,
+                        title = "Are you sure you want to activate this profile with strict mode? ",
+                        message = "You won't be able to deactivate it until strict mode ends.",
+                        onConfirm = {
+                            (context as? LifecycleOwner)?.lifecycleScope?.launch {
+                                activateProfile(
+                                    profile = profile, context = context
+                                )
+                                onResult(true)
+                            }
+                        },
+                        onCancel ={
+                            onResult(false)
+                        }
+                    )
+                }else{
+                    activateProfile(profile, context)
+                    onResult(true)
                 }
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(intent)
-                } else {
-                    context.startService(intent)
-                }
-
-                Utils.ToasUtils.showToast(
-                    context,
-                    "The profile \"${profile.name}\" has been activated"
-                )
-                onResult(true)
-
             } else {
+
+                if(profile.isStrictModeEnabled){
+                    val timeDifference = profile.strictDurationMillis - (System.currentTimeMillis() - profile.strictStartedAt!!)
+                    if(timeDifference > 0){
+                        val time = Utils.ParseUtils.millisToTimeParts(timeDifference)
+
+                        Utils.ToasUtils.showToast(
+                            context,
+                            "The strict mode is actived. You can desactivate this profile in " +
+                                    "${time.days}d ${time.hours}h ${time.minutes}m ${time.seconds}s"
+                        )
+
+                        onResult(false)
+                        return@launch
+                    }
+                }
+
                 val updated = profile.copy(isActive = false)
                 repo.update(updated)
-                ActiveProfileManager.setActiveProfile(null)
+                ActiveProfileManager.removeActiveProfile(context, profile.id)
                 Utils.ToasUtils.showToast(
                     context,
                     "The profile \"${profile.name}\" has been deactivated"
@@ -109,6 +130,35 @@ class ProfileViewModel(
                 onResult(true)
             }
         }
+    }
+
+    private suspend fun activateProfile(
+        profile: Profile,
+        context: Context
+    ) {
+        val updated = profile.copy(
+            isActive = true,
+            strictStartedAt = System.currentTimeMillis()
+        )
+        repo.update(updated)
+        ActiveProfileManager.addActiveProfile(context, updated)
+
+        val activeNames = ActiveProfileManager.activeProfileFlow.value.joinToString(",") {it.name}
+
+        val intent = Intent(context, ForegroundService::class.java).apply {
+            putExtra("PROFILE_NAMES", activeNames)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent)
+        } else {
+            context.startService(intent)
+        }
+
+        Utils.ToasUtils.showToast(
+            context,
+            "The profile \"${profile.name}\" has been activated"
+        )
     }
 
     fun createProfile(name : String){

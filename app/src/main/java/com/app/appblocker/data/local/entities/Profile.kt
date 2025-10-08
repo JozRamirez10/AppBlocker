@@ -8,4 +8,9 @@ data class Profile (
     @PrimaryKey(autoGenerate = true) val id : Int = 0,
     val name : String,
     val isActive : Boolean = false,
+
+    // Strict Mode
+    val isStrictModeEnabled : Boolean = false,
+    val strictDurationMillis : Long = 0L,
+    val strictStartedAt : Long? = null
 )
