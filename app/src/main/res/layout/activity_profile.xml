@@ -104,11 +104,22 @@
 
         <include
             android:id="@+id/card_webBlock"
-            layout="@layout/item_card_block"
-            android:layout_marginTop="5dp"
-            android:layout_marginHorizontal="8dp"
+            layout="@layout/item_card_block"/>
+
+        <TextView
+            android:id="@+id/et_strict_mode"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingVertical="15dp"
+            android:paddingStart="20dp"
+            android:text="@string/tv_strictMode"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <include
+            android:id="@+id/card_strict_mode"
+            layout="@layout/item_card_block" />
+
 
     </LinearLayout>
 
