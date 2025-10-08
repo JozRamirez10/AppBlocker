@@ -31,50 +31,45 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         if (event == null || event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
 
         val packageName = event.packageName?.toString() ?: return
+        val activeProfiles = ActiveProfileManager.activeProfileFlow.value
 
-        // Verifica si hay un perfil activo
-        val profile = ActiveProfileManager.activeProfileFlow.value
-
-        if(profile == null){
-            if(lastProfileId != null){
-                stopService(Intent(this, ForegroundService::class.java))
-                lastProfileId = null
-            }
+        if(activeProfiles.isEmpty()){
+            stopService(Intent(this, ForegroundService::class.java))
             return
         }
 
-        if(lastProfileId != profile.id){
-            val intent = Intent(this, ForegroundService::class.java).apply {
-                putExtra("PROFILE_NAME", profile.name)
-            }
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                startForegroundService(intent)
-            }else{
-                startService(intent)
-            }
-            lastProfileId = profile.id
+        val intent = Intent(this, ForegroundService::class.java).apply {
+            putExtra("PROFILE_NAMES", activeProfiles.joinToString(",") {it.name})
         }
 
-        // Obtén schedule
-        val schedule = runBlocking {
-            ScheduleRepository().getScheduleByProfile(profile.id).firstOrNull()
-        } ?: return
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            startForegroundService(intent)
+        }else{
+            startService(intent)
+        }
 
-        val validNow = ScheduleEvaluator.isNowValid(
-            profile = profile,
-            scheduleDays = Utils.ParseUtils.parseDays(schedule.days),
-            startHour = LocalTime.parse(schedule.hourFrom),
-            endHour = LocalTime.parse(schedule.hourTo),
-            now = LocalDateTime.now()
-        )
+        activeProfiles.forEach { profile ->
+            val schedule = runBlocking {
+                ScheduleRepository().getScheduleByProfile(profile.id).firstOrNull()
+            } ?: return@forEach
 
-        if (validNow) {
-            val blockedApps = runBlocking {
-                ProfileAppRepository().getPackageNameAppByProfile(profile.id)
-            }
-            if (blockedApps.contains(packageName)) {
-                val appName = getAppNameFromPackage(packageName)
-                launchLockActivity(appName)
+            val validNow = ScheduleEvaluator.isNowValid(
+                profile = profile,
+                scheduleDays = Utils.ParseUtils.parseDays(schedule.days),
+                startHour = LocalTime.parse(schedule.hourFrom),
+                endHour = LocalTime.parse(schedule.hourTo),
+                now = LocalDateTime.now()
+            )
+
+            if (validNow) {
+                val blockedApps = runBlocking {
+                    ProfileAppRepository().getPackageNameAppByProfile(profile.id)
+                }
+                if (blockedApps.contains(packageName)) {
+                    val appName = getAppNameFromPackage(packageName)
+                    launchLockActivity(appName)
+                    return
+                }
             }
         }
     }

@@ -19,7 +19,7 @@ class ProfileAdapter(
 
             binding.switchProfile.setOnCheckedChangeListener{_, isChecked ->
                 onSwtichChanged(profile, isChecked){
-                    binding.switchProfile.isChecked = false
+                    binding.switchProfile.isChecked = profile.isActive
                 }
             }
 
