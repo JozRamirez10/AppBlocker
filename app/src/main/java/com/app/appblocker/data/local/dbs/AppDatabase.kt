@@ -21,7 +21,7 @@ import com.app.appblocker.data.local.entities.WebLink
         ProfileWebLink::class,
         Schedule::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
