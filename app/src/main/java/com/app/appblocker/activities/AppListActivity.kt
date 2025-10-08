@@ -4,10 +4,12 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.transition.Visibility
 import com.app.appblocker.adapters.AppListAdapter
 import com.app.appblocker.databinding.ActivityAppListBinding
 import com.app.appblocker.models.AppModel
@@ -36,6 +38,11 @@ class AppListActivity : AppCompatActivity() {
             loadInstalledApps(profileId)
         }else{
             loadInstalledApps(-1)
+        }
+
+        val active = intent.getIntExtra("active", -1)
+        if(active != -1 && active == 1){
+            binding.mbSave.visibility = View.GONE
         }
 
         binding.ibBack.setOnClickListener {

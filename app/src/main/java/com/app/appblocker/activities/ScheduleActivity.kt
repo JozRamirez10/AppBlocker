@@ -37,6 +37,11 @@ class ScheduleActivity : AppCompatActivity() {
 
         loadProfile()
 
+        val active = intent.getIntExtra("active", -1)
+        if(active != -1 && active == 1){
+            binding.mbSave.visibility = View.GONE
+        }
+
         binding.ibBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
         }

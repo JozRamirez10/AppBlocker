@@ -2,6 +2,7 @@ package com.app.appblocker.activities
 
 import android.os.Bundle
 import android.util.Patterns
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -29,6 +30,11 @@ class WebBlockActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         profileId = intent.getIntExtra("profileId", -1)
+
+        val active = intent.getIntExtra("active", -1)
+        if(active != -1 && active == 1){
+            binding.mbSave.visibility = View.GONE
+        }
 
         setupRecycler()
         loadData()
