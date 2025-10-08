@@ -52,6 +52,13 @@ class Utils {
         }
     }
 
+    data class TimeParts(
+        val days : Long,
+        val hours : Long,
+        val minutes : Long,
+        val seconds : Long
+    )
+
     object ParseUtils{
         fun parseDays(daysString : String) : List<Int> {
             return daysString.split(",")
@@ -60,6 +67,16 @@ class Utils {
 
         fun parseHour(hourString : String) : Int {
             return LocalTime.parse(hourString).hour
+        }
+
+        fun millisToTimeParts(millis : Long) : TimeParts{
+            val seconds = millis.div(1000)
+            val days = seconds.div(86_400)
+            val hours = (seconds.rem(86_400)).div(3600)
+            val minutes = (seconds.rem(3600)).div(60)
+            val secs = seconds.rem(60)
+
+            return TimeParts(days, hours, minutes, secs)
         }
     }
 
