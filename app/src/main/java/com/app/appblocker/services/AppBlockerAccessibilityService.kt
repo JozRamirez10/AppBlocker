@@ -2,6 +2,7 @@ package com.app.appblocker.services
 
 import android.Manifest
 import android.accessibilityservice.AccessibilityService
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -26,6 +27,12 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         var lastProfileId: Int? = null
     }
 
+    private fun isServiceRunning(serviceClass: Class<*>) : Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+        return manager.getRunningServices(Int.MAX_VALUE)
+            .any { it.service.className == serviceClass.name }
+    }
+
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null || event.eventType != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) return
@@ -38,16 +45,18 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             return
         }
 
-        val intent = Intent(this, ForegroundService::class.java).apply {
-            putExtra("PROFILE_NAMES", activeProfiles.joinToString(",") {it.name})
-        }
+        if(!isServiceRunning(ForegroundService::class.java)){
+            val intent = Intent(this, ForegroundService::class.java).apply {
+                putExtra("PROFILE_NAMES", activeProfiles.joinToString(",") {it.name})
+            }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            startForegroundService(intent)
-        }else{
-            startService(intent)
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                startForegroundService(intent)
+            }else{
+                startService(intent)
+            }
         }
-
+        
         activeProfiles.forEach { profile ->
             val schedule = runBlocking {
                 ScheduleRepository().getScheduleByProfile(profile.id).firstOrNull()
