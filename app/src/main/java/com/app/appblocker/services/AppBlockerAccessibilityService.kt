@@ -76,7 +76,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
                 }
                 if (blockedApps.contains(packageName)) {
                     val appName = getAppNameFromPackage(packageName)
-                    launchLockActivity(appName)
+                    launchLockActivity(appName, packageName)
                     return
                 }
             }
@@ -92,7 +92,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
         }
     }
 
-    private fun launchLockActivity(target: String) {
+    private fun launchLockActivity(target: String, packageName: String) {
         App.isInLockMode = true
         val intent = Intent(this, LockActivity::class.java).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -100,6 +100,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             putExtra("target", target)
+            putExtra("packageName", packageName)
         }
         startActivity(intent)
     }

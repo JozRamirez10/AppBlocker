@@ -1,6 +1,7 @@
 package com.app.appblocker.activities
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -25,7 +26,19 @@ class LockActivity : AppCompatActivity() {
         )
 
         val blockedApp = intent.getStringExtra("target") ?: "This app"
+
+        val packageName = intent.getStringExtra("packageName")
+
         binding.tvLock.text = "$blockedApp is locked"
+
+        if(packageName != null){
+            try{
+                val icon = packageManager.getApplicationIcon(packageName)
+                binding.ivLockedAppIcon.setImageDrawable(icon)
+            }catch(e : PackageManager.NameNotFoundException){
+                e.printStackTrace()
+            }
+        }
 
         binding.bClose.setOnClickListener {
             App.isInLockMode = false
