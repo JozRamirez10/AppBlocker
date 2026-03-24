@@ -10,7 +10,7 @@ import com.app.appblocker.databinding.ItemAppBinding
 import com.app.appblocker.models.AppModel
 
 class AppListAdapter (
-    private val apps : List<AppModel>
+    private var apps : List<AppModel>
 ) : RecyclerView.Adapter<AppListAdapter.AppViewHolder>(){
 
     inner class AppViewHolder(binding : ItemAppBinding) : RecyclerView.ViewHolder(binding.root){
@@ -40,5 +40,10 @@ class AppListAdapter (
         holder.cb_selected.setOnCheckedChangeListener { _, isChecked ->
             app.isSelected = isChecked
         }
+    }
+
+    fun updateList(filteredApps: List<AppModel>){
+        this.apps = filteredApps
+        notifyDataSetChanged()
     }
 }

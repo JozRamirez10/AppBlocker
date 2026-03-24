@@ -9,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.Visibility
 import com.app.appblocker.adapters.AppListAdapter
 import com.app.appblocker.databinding.ActivityAppListBinding
 import com.app.appblocker.models.AppModel
@@ -17,6 +16,7 @@ import com.app.appblocker.utils.Utils
 import com.app.appblocker.utils.BlacklistApps
 import com.app.appblocker.view_models.AppListViewModel
 import kotlinx.coroutines.launch
+import androidx.appcompat.widget.SearchView
 
 class AppListActivity : AppCompatActivity() {
 
@@ -52,6 +52,29 @@ class AppListActivity : AppCompatActivity() {
         binding.mbSave.setOnClickListener {
             saveApps()
         }
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false;
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterApps(newText ?: "")
+                return true;
+            }
+
+        })
+    }
+
+    private fun filterApps(query: String){
+        val filteredList = if (query.isEmpty()){
+            appList
+        }else{
+            appList.filter {
+                it.appName.contains(query, ignoreCase = true)
+            }
+        }
+        adapter.updateList(filteredList)
     }
 
     private fun saveApps() {
