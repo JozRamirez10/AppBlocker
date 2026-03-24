@@ -104,7 +104,8 @@
 
         <include
             android:id="@+id/card_webBlock"
-            layout="@layout/item_card_block"/>
+            layout="@layout/item_card_block"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/et_strict_mode"
