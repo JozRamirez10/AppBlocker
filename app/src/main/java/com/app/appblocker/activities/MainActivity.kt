@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter = ProfileAdapter(
             profiles = emptyList(),
-            onSwtichChanged = { profile, checked, revert ->
+            onSwitchChanged = { profile, checked, revert ->
                 vm.toogleActive(profile, checked, this) { success ->
                     if (!success) {
                         // Aquí decides qué hacer si falla la activación

@@ -8,10 +8,9 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Build
+import android.os.Handler
 import android.provider.Settings
-import android.view.accessibility.AccessibilityManager
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -112,6 +111,36 @@ class Utils {
                     dialog.dismiss()
                 }
                 .show()
+        }
+    }
+
+    object CountdownUtils {
+
+        fun start(
+            handler: Handler,
+            totalMillis: Long,
+            startedAt: Long,
+            onTick: (String) -> Unit,
+            onFinished: () -> Unit
+        ): Runnable{
+            val runnable = object : Runnable {
+                override fun run() {
+                    val elapsed = System.currentTimeMillis() - startedAt
+                    val remaining = totalMillis - elapsed
+
+                    if(remaining <= 0){
+                        onFinished()
+                        handler.removeCallbacks(this)
+                    }else{
+                        val time = ParseUtils.millisToTimeParts(remaining)
+                        val formattedTime = "${time.days}d ${time.hours}h ${time.minutes}m ${time.seconds}s"
+                        onTick(formattedTime)
+                        handler.postDelayed(this, 1000)
+                    }
+                }
+            }
+            handler.post(runnable)
+            return runnable
         }
     }
 

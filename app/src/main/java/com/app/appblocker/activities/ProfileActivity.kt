@@ -303,17 +303,18 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun loadStrictMode() {
         val millis = currentProfile?.strictDurationMillis ?: 0L
+        val isStrictEnabled = currentProfile?.isStrictModeEnabled ?: false
+
+        strictModeBinding.switchStrictMode.isChecked = isStrictEnabled
 
         if ( millis > 0) {
-            if(currentProfile?.isActive == true && currentProfile?.strictStartedAt != null && currentProfile?.isStrictModeEnabled == true){
+            if(currentProfile?.isActive == true && currentProfile?.strictStartedAt != null && isStrictEnabled){
                 startStrictModeCountdown(millis, currentProfile!!.strictStartedAt!!)
+                strictModeBinding.switchStrictMode.isEnabled = false
             }else{
                 val time = Utils.ParseUtils.millisToTimeParts(millis)
                 strictModeBinding.tvStrictModeTime.text = "${time.days}d ${time.hours}h ${time.minutes}m ${time.seconds}s"
                 strictModeBinding.switchStrictMode.isEnabled = true
-                if(currentProfile?.isStrictModeEnabled == true){
-                    strictModeBinding.switchStrictMode.isChecked = true
-                }
             }
         }else{
             loadStrictModeEmpty()
@@ -324,23 +325,17 @@ class ProfileActivity : AppCompatActivity() {
         countdownHandler?.removeCallbacks(countdownRunnable ?: return)
         countdownHandler = Handler(mainLooper)
 
-        countdownRunnable = object : Runnable {
-            override fun run() {
-                val elapsed = System.currentTimeMillis() - startedAt
-                val remaining = totalMillis - elapsed
-
-                if(remaining <= 0){
-                    strictModeBinding.tvStrictModeTime.text = "0d 0h 0m 0s"
-                    countdownHandler?.removeCallbacks(this)
-                }else{
-                    val time = Utils.ParseUtils.millisToTimeParts(remaining)
-                    strictModeBinding.tvStrictModeTime.text =
-                        "${time.days}d ${time.hours}h ${time.minutes}m ${time.seconds}s"
-                    countdownHandler?.postDelayed(this, 1000)
-                }
+        countdownRunnable = Utils.CountdownUtils.start(
+            handler = countdownHandler!!,
+            totalMillis = totalMillis,
+            startedAt = startedAt,
+            onTick = { formattedTime ->
+                strictModeBinding.tvStrictModeTime.text = formattedTime
+            },
+            onFinished = {
+                strictModeBinding.tvStrictModeTime.text = "0d 0h 0m 0s"
             }
-        }
-        countdownHandler?.post(countdownRunnable!!)
+        )
     }
 
     private fun inflateCardContents() {
