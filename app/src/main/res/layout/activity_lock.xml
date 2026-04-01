@@ -32,6 +32,7 @@
         android:id="@+id/b_close"
         android:layout_marginHorizontal="40dp"
         app:cornerRadius="8dp"
+        android:padding="15dp"
         android:text="@string/b_close"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

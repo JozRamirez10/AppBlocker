@@ -13,7 +13,8 @@
     <ImageButton
         android:id="@+id/ib_back"
         android:src="@drawable/ic_back"
-        android:padding="10dp"
+        android:paddingHorizontal="25dp"
+        android:paddingTop="20dp"
         android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -115,6 +116,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:layout_margin="5dp"
+        android:padding="15dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cornerRadius="8dp"/>
