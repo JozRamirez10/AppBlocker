@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.app.appblocker.R
 import com.app.appblocker.databinding.ActivitySetupPinBinding
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.PinManager
 import com.app.appblocker.utils.Utils
 
@@ -19,8 +20,8 @@ class SetupPinActivity : AppCompatActivity() {
         binding = ActivitySetupPinBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val mode = intent.getStringExtra("mode")
-        if(mode == "reconfig"){
+        val mode = intent.getStringExtra(AppConstants.MODE)
+        if(mode == AppConstants.RECONFIG){
             binding.ibBack.visibility = View.VISIBLE
             binding.ibBack.setOnClickListener{
                 onBackPressedDispatcher.onBackPressed()
@@ -43,12 +44,12 @@ class SetupPinActivity : AppCompatActivity() {
             val pinOrPass = binding.etPin.text.toString()
             val confirm = binding.etConfirmPin.text.toString()
 
-            val type = if(binding.rbPin.isChecked) "PIN" else "PASSWORD"
+            val type = if(binding.rbPin.isChecked) AppConstants.PIN else AppConstants.PASSWORD
 
             binding.tilPin.error = null
             binding.tilConfirmPin.error = null
 
-            if(type == "PIN"){
+            if(type == AppConstants.PIN){
                 if(pinOrPass.length < 4 || pinOrPass.length > 8){
                     binding.tilPin.error = "The PIN must be between 4 and 8 digits"
                     binding.etPin.requestFocus()
@@ -74,7 +75,7 @@ class SetupPinActivity : AppCompatActivity() {
 
             PinManager.savePin(this, pinOrPass, type)
 
-            if(mode == "reconfig"){
+            if(mode == AppConstants.RECONFIG){
                 Utils.ToasUtils.showToast(
                     this,
                     "Password update successfully"

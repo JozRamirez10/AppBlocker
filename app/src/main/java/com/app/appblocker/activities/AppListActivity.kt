@@ -17,6 +17,7 @@ import com.app.appblocker.utils.BlacklistApps
 import com.app.appblocker.view_models.AppListViewModel
 import kotlinx.coroutines.launch
 import androidx.appcompat.widget.SearchView
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.ViewUtils
 
 class AppListActivity : AppCompatActivity() {
@@ -30,7 +31,7 @@ class AppListActivity : AppCompatActivity() {
         binding = ActivityAppListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val active = intent.getIntExtra("active", -1)
+        val active = intent.getIntExtra(AppConstants.ACTIVE, -1)
         val isProfileActive = (active == 1)
 
         if(isProfileActive){
@@ -43,7 +44,7 @@ class AppListActivity : AppCompatActivity() {
         adapter = AppListAdapter(appList, isDisabled = isProfileActive)
         binding.RVApplist.layoutManager = LinearLayoutManager(this)
 
-        val profileId = intent.getIntExtra("profileId", -1)
+        val profileId = intent.getIntExtra(AppConstants.PROFILEID, -1)
 
         if(profileId != -1){
             loadInstalledApps(profileId)
@@ -85,7 +86,7 @@ class AppListActivity : AppCompatActivity() {
 
     private fun saveApps() {
         val selectedApps = appList.filter { it.isSelected }
-        val profileId = intent.getIntExtra("profileId", -1)
+        val profileId = intent.getIntExtra(AppConstants.PROFILEID, -1)
 
         if(profileId != -1){
             val vm : AppListViewModel by viewModels()

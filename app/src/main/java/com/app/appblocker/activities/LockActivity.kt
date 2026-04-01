@@ -7,6 +7,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.app.appblocker.App
 import com.app.appblocker.databinding.ActivityLockBinding
+import com.app.appblocker.utils.AppConstants
 
 class LockActivity : AppCompatActivity() {
 
@@ -25,9 +26,9 @@ class LockActivity : AppCompatActivity() {
             WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
         )
 
-        val blockedApp = intent.getStringExtra("target") ?: "This app"
+        val blockedApp = intent.getStringExtra(AppConstants.TARGET) ?: "This app"
 
-        val packageName = intent.getStringExtra("packageName")
+        val packageName = intent.getStringExtra(AppConstants.PACKAGENAME)
 
         binding.tvLock.text = "$blockedApp is locked"
 

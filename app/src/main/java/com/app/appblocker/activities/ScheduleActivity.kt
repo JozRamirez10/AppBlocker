@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.app.appblocker.data.local.entities.Schedule
 import com.app.appblocker.databinding.ActivityScheduleBinding
 import com.app.appblocker.enums.DaysOfWeek
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.Utils
 import com.app.appblocker.utils.ViewUtils
 import com.app.appblocker.view_models.ScheduleViewModel
@@ -38,7 +39,7 @@ class ScheduleActivity : AppCompatActivity() {
 
         loadProfile()
 
-        val active = intent.getIntExtra("active", -1)
+        val active = intent.getIntExtra(AppConstants.ACTIVE, -1)
         if(active != -1 && active == 1){
             binding.mbSave.visibility = View.GONE
             ViewUtils.setVisibility(binding.bannerWarning.tvActiveWarning, true)
@@ -116,7 +117,7 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private fun loadProfile() {
-        profileId = intent.getIntExtra("profileId", -1)
+        profileId = intent.getIntExtra(AppConstants.PROFILEID, -1)
         if(profileId == -1){
             Utils.ToasUtils.showToast(
                 this, "Invalid Profile"

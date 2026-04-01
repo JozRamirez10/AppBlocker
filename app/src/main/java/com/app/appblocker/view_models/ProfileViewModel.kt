@@ -3,8 +3,6 @@ package com.app.appblocker.view_models
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.core.app.ServiceCompat.startForeground
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -18,7 +16,7 @@ import com.app.appblocker.repositories.ProfileRepository
 import com.app.appblocker.repositories.ScheduleRepository
 import com.app.appblocker.repositories.WebLinkRepository
 import com.app.appblocker.services.ForegroundService
-import com.app.appblocker.utils.NotificationUtils
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.Utils
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -146,7 +144,7 @@ class ProfileViewModel(
         val activeNames = ActiveProfileManager.activeProfileFlow.value.joinToString(",") {it.name}
 
         val intent = Intent(context, ForegroundService::class.java).apply {
-            putExtra("PROFILE_NAMES", activeNames)
+            putExtra(AppConstants.PROFILE_NAMES, activeNames)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

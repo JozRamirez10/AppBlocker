@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.app.appblocker.databinding.ActivityVerifyPinBinding
 import com.app.appblocker.utils.ActivityUtils
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.PinManager
 
 class VerifyPinActivity : AppCompatActivity() {
@@ -19,14 +20,14 @@ class VerifyPinActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         val type = PinManager.getType(this)
-        val mode = intent.getStringExtra("mode")
+        val mode = intent.getStringExtra(AppConstants.MODE)
 
-        if(mode != "reconfig"){
+        if(mode != AppConstants.RECONFIG){
             binding.ibBack.visibility = View.GONE
             ActivityUtils.setMinimizeOnBack(this)
         }
 
-        if(type == "PIN"){
+        if(type == AppConstants.PIN){
             binding.etPin.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
             binding.etPin.hint = "Enter your PIN"
         }else{
@@ -51,9 +52,9 @@ class VerifyPinActivity : AppCompatActivity() {
             }
 
             if(PinManager.verifyPin(this, entered)) {
-                 if(mode == "reconfig"){
+                 if(mode == AppConstants.RECONFIG){
                     val setupIntent = Intent(this, SetupPinActivity::class.java)
-                     setupIntent.putExtra("mode", "reconfig")
+                     setupIntent.putExtra(AppConstants.MODE, AppConstants.RECONFIG)
                     startActivity(setupIntent)
                     finish()
                 }else{

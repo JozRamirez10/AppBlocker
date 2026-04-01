@@ -14,7 +14,7 @@ import com.app.appblocker.activities.LockActivity
 import com.app.appblocker.utils.ScheduleEvaluator
 import com.app.appblocker.repositories.ProfileAppRepository
 import com.app.appblocker.repositories.ScheduleRepository
-import com.app.appblocker.utils.NotificationUtils
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.Utils
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
@@ -47,7 +47,7 @@ class AppBlockerAccessibilityService : AccessibilityService() {
 
         if(!isServiceRunning(ForegroundService::class.java)){
             val intent = Intent(this, ForegroundService::class.java).apply {
-                putExtra("PROFILE_NAMES", activeProfiles.joinToString(",") {it.name})
+                putExtra(AppConstants.PROFILE_NAMES, activeProfiles.joinToString(",") {it.name})
             }
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
@@ -99,8 +99,8 @@ class AppBlockerAccessibilityService : AccessibilityService() {
             addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
             addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-            putExtra("target", target)
-            putExtra("packageName", packageName)
+            putExtra(AppConstants.TARGET, target)
+            putExtra(AppConstants.PACKAGENAME, packageName)
         }
         startActivity(intent)
     }

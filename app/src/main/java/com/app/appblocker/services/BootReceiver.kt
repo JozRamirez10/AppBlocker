@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import com.app.appblocker.utils.ActiveProfileManager
+import com.app.appblocker.utils.AppConstants
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
@@ -17,7 +18,7 @@ class BootReceiver : BroadcastReceiver() {
                 // Reiniciar el servicio foreground con los perfiles cargados
                 val activeNames = activeProfiles.joinToString(",") { it.name }
                 val serviceIntent = Intent(context, ForegroundService::class.java).apply {
-                    putExtra("PROFILE_NAMES", activeNames)
+                    putExtra(AppConstants.PROFILE_NAMES, activeNames)
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

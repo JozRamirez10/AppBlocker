@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.appblocker.adapters.ProfileAdapter
 import com.app.appblocker.databinding.ActivityMainBinding
 import com.app.appblocker.utils.ActivityUtils
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.Utils
 import com.app.appblocker.view_models.ProfileViewModel
 import kotlinx.coroutines.launch
@@ -65,7 +66,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.ibSettings.setOnClickListener {
             val intent = Intent(this, VerifyPinActivity::class.java)
-            intent.putExtra("mode", "reconfig")
+            intent.putExtra(AppConstants.MODE, AppConstants.RECONFIG)
             startActivity(intent)
         }
 
@@ -112,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun goProfile(profileId : Int? = null) {
         val intent = Intent(this, ProfileActivity::class.java)
-        profileId?.let {intent.putExtra("profileId", it)}
+        profileId?.let {intent.putExtra(AppConstants.PROFILEID, it)}
         startActivity(intent)
     }
 

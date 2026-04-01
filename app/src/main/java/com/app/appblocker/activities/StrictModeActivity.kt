@@ -2,17 +2,14 @@ package com.app.appblocker.activities
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.app.appblocker.R
 import com.app.appblocker.data.local.entities.Profile
 import com.app.appblocker.databinding.ActivityStrictModeBinding
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.Utils
 import com.app.appblocker.utils.ViewUtils
 import com.app.appblocker.view_models.ProfileViewModel
@@ -36,7 +33,7 @@ class StrictModeActivity : AppCompatActivity() {
 
         configureRanges()
 
-        val active = intent.getIntExtra("active", -1)
+        val active = intent.getIntExtra(AppConstants.ACTIVE, -1)
         if(active != -1 && active == 1){
             binding.mbSave.visibility = View.GONE
             ViewUtils.setVisibility(binding.bannerWarning.tvActiveWarning, true)
@@ -58,7 +55,7 @@ class StrictModeActivity : AppCompatActivity() {
     }
 
     private fun loadProfile() {
-        profileId = intent.getIntExtra("profileId", -1)
+        profileId = intent.getIntExtra(AppConstants.PROFILEID, -1)
         if(profileId == -1){
             errorProfile()
         }else{

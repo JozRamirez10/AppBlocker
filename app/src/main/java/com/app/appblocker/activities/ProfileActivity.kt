@@ -30,6 +30,7 @@ import com.app.appblocker.enums.DaysOfWeek
 import com.app.appblocker.enums.Destination
 import com.app.appblocker.enums.ShortDays
 import com.app.appblocker.models.AppModel
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.Utils
 import com.app.appblocker.utils.ViewUtils
 import com.app.appblocker.view_models.AppListViewModel
@@ -193,7 +194,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun initProfile() {
-        val profileId = intent.getIntExtra("profileId", -1)
+        val profileId = intent.getIntExtra(AppConstants.PROFILEID, -1)
         if(profileId != -1){
             chargeProfile(profileId)
         }else{
@@ -393,9 +394,9 @@ class ProfileActivity : AppCompatActivity() {
             Destination.SCHEDULE -> Intent(this, ScheduleActivity::class.java)
             Destination.STRICT_MODE -> Intent(this, StrictModeActivity::class.java)
         }
-        intent.putExtra("profileId", profileId)
+        intent.putExtra(AppConstants.PROFILEID, profileId)
         if(currentProfile?.isActive == true){
-            intent.putExtra("active", 1)
+            intent.putExtra(AppConstants.ACTIVE, 1)
         }
         startActivity(intent)
     }

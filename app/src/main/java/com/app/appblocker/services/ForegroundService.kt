@@ -1,19 +1,13 @@
 package com.app.appblocker.services
 
-import android.Manifest
-import android.annotation.SuppressLint
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
-import android.os.SystemClock
-import androidx.annotation.RequiresPermission
 import com.app.appblocker.utils.ActiveProfileManager
+import com.app.appblocker.utils.AppConstants
 import com.app.appblocker.utils.NotificationUtils
 
 
@@ -33,7 +27,7 @@ class ForegroundService : Service() {
             ActiveProfileManager.loadProfiles(applicationContext)
         }
 
-        val profileNames = intent?.getStringExtra("PROFILE_NAMES")
+        val profileNames = intent?.getStringExtra(AppConstants.PROFILE_NAMES)
             ?: ActiveProfileManager.activeProfileFlow.value.joinToString(", ") { it.name }
                 .ifEmpty { "Unknown" }
 
