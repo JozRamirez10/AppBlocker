@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         Utils.SwipeToDeleteHelper.attachToRecyclerView(
             recyclerView = binding.recyclerView,
             getItem = { pos -> adapter.getProfileAt(pos) },
+            canDelete = { profile -> !profile.isActive },
             onDeleteConfirmed = {
                 profile -> vm.deleteProfile(profile)
                 Utils.ToasUtils.showToast(

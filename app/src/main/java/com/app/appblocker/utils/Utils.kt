@@ -121,6 +121,7 @@ class Utils {
             recyclerView: RecyclerView,
             getItem: (Int) -> T,
             onDeleteConfirmed: (T) -> Unit,
+            canDelete: (T) -> Boolean = { true },
             context: Context,
             title: String,
             message: String
@@ -136,14 +137,18 @@ class Utils {
                     val position = viewHolder.adapterPosition
                     val item = getItem(position)
 
-                    DialogUtils.showConfirmDialog(
-                        context = context,
-                        title = title,
-                        message = message,
-                        onConfirm = { onDeleteConfirmed(item) },
-                        onCancel = { recyclerView.adapter?.notifyItemChanged(position) }
-                    )
-
+                    if(canDelete(item)){
+                        DialogUtils.showConfirmDialog(
+                            context = context,
+                            title = title,
+                            message = message,
+                            onConfirm = { onDeleteConfirmed(item) },
+                            onCancel = { recyclerView.adapter?.notifyItemChanged(position)}
+                        )
+                    }else{
+                        recyclerView.adapter?.notifyItemChanged(position)
+                        ToasUtils.showToast(context, "Cannot delete an active profile")
+                    }
                 }
 
                 override fun onChildDraw(
