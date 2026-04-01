@@ -3,6 +3,7 @@ package com.app.appblocker.activities
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.app.appblocker.R
 import com.app.appblocker.databinding.ActivitySetupPinBinding
@@ -17,6 +18,16 @@ class SetupPinActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySetupPinBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val mode = intent.getStringExtra("mode")
+        if(mode == "reconfig"){
+            binding.ibBack.visibility = View.VISIBLE
+            binding.ibBack.setOnClickListener{
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }else{
+            binding.ibBack.visibility = View.GONE
+        }
 
         binding.rgType.setOnCheckedChangeListener { _, checkedId ->
             val inputType = if(checkedId == R.id.rbPin){
@@ -63,7 +74,6 @@ class SetupPinActivity : AppCompatActivity() {
 
             PinManager.savePin(this, pinOrPass, type)
 
-            val mode = intent.getStringExtra("mode")
             if(mode == "reconfig"){
                 Utils.ToasUtils.showToast(
                     this,
@@ -75,6 +85,7 @@ class SetupPinActivity : AppCompatActivity() {
                     "Security successfully configured"
                 )
             }
+
             startActivity(Intent(this, MainActivity::class.java))
             finish()
 

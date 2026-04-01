@@ -51,6 +51,7 @@ class VerifyPinActivity : AppCompatActivity() {
             if(PinManager.verifyPin(this, entered)) {
                  if(mode == "reconfig"){
                     val setupIntent = Intent(this, SetupPinActivity::class.java)
+                     setupIntent.putExtra("mode", "reconfig")
                     startActivity(setupIntent)
                     finish()
                 }else{
