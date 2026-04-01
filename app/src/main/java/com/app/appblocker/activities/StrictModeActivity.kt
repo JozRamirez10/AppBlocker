@@ -14,6 +14,7 @@ import com.app.appblocker.R
 import com.app.appblocker.data.local.entities.Profile
 import com.app.appblocker.databinding.ActivityStrictModeBinding
 import com.app.appblocker.utils.Utils
+import com.app.appblocker.utils.ViewUtils
 import com.app.appblocker.view_models.ProfileViewModel
 import kotlinx.coroutines.launch
 
@@ -38,6 +39,13 @@ class StrictModeActivity : AppCompatActivity() {
         val active = intent.getIntExtra("active", -1)
         if(active != -1 && active == 1){
             binding.mbSave.visibility = View.GONE
+            ViewUtils.setVisibility(binding.bannerWarning.tvActiveWarning, true)
+
+            ViewUtils.setViewEnabled(binding.npDays, false)
+            ViewUtils.setViewEnabled(binding.npHours, false)
+            ViewUtils.setViewEnabled(binding.npMinutes, false)
+        }else{
+            ViewUtils.setVisibility(binding.bannerWarning.tvActiveWarning, false)
         }
 
         binding.ibBack.setOnClickListener {

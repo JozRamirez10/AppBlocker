@@ -19,6 +19,8 @@
     <string name="tv_webBlock">Web Block</string>
     <string name="tv_strictMode">Strict Mode</string>
 
+    <string name="tv_profile_active_warning">This profile is active. Editing is disabled.</string>
+
     /* App List Activity */
     <string name="tv_app_list_title">Apps</string>
 

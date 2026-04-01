@@ -8,9 +8,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.app.appblocker.databinding.ItemAppBinding
 import com.app.appblocker.models.AppModel
+import com.app.appblocker.utils.ViewUtils
 
 class AppListAdapter (
-    private var apps : List<AppModel>
+    private var apps : List<AppModel>,
+    private val isDisabled: Boolean = false
 ) : RecyclerView.Adapter<AppListAdapter.AppViewHolder>(){
 
     inner class AppViewHolder(binding : ItemAppBinding) : RecyclerView.ViewHolder(binding.root){
@@ -34,12 +36,16 @@ class AppListAdapter (
         holder.tv_name.text = app.appName
 
         holder.cb_selected.setOnCheckedChangeListener(null)
-
         holder.cb_selected.isChecked = app.isSelected
 
-        holder.cb_selected.setOnCheckedChangeListener { _, isChecked ->
-            app.isSelected = isChecked
+        ViewUtils.setViewReadOnly(holder.cb_selected, isDisabled)
+
+        if(!isDisabled){
+            holder.cb_selected.setOnCheckedChangeListener { _, isChecked ->
+                app.isSelected = isChecked
+            }
         }
+
     }
 
     fun updateList(filteredApps: List<AppModel>){

@@ -31,6 +31,7 @@ import com.app.appblocker.enums.Destination
 import com.app.appblocker.enums.ShortDays
 import com.app.appblocker.models.AppModel
 import com.app.appblocker.utils.Utils
+import com.app.appblocker.utils.ViewUtils
 import com.app.appblocker.view_models.AppListViewModel
 import com.app.appblocker.view_models.ProfileViewModel
 import com.app.appblocker.view_models.ScheduleViewModel
@@ -97,10 +98,22 @@ class ProfileActivity : AppCompatActivity() {
     private fun loadActive(profileId: Int){
         lifecycleScope.launch {
             val profile = currentProfile ?: return@launch
-            if(!profile.isActive) return@launch
 
-            strictModeBinding.switchStrictMode.isEnabled = false
+            if(!profile.isActive) {
+                ViewUtils.setViewEnabled(binding.etProfile, true)
+                ViewUtils.setVisibility(binding.bannerWarning.tvActiveWarning, false)
+                ViewUtils.setVisibility(binding.ibDelete, true)
+                return@launch
+            }
+
+            ViewUtils.setVisibility(binding.ibDelete, false)
+            ViewUtils.setVisibility(binding.bannerWarning.tvActiveWarning, true)
             binding.mbSave.visibility = View.GONE
+
+            ViewUtils.setViewEnabled(binding.etProfile, false)
+            ViewUtils.setViewEnabled(strictModeBinding.switchStrictMode, false)
+
+            binding.etProfile.setOnClickListener(null)
 
             val scheduleOk = isScheduleValid(profileId)
             val blockOk = isBlockValid(profileId)
@@ -389,12 +402,12 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun nameProfileBehavior() {
         binding.etProfile.setOnClickListener {
-            enableEditing(binding.etProfile)
+            enableEditingAndOpenKeyboard(binding.etProfile)
         }
 
         binding.etProfile.setOnFocusChangeListener { v, hasFocus ->
             val et = v as EditText
-            if(hasFocus) enableEditing(et) else disableEditing(et)
+            if(hasFocus) enableEditingAndOpenKeyboard(et) else disableEditing(et)
         }
 
         binding.etProfile.setOnEditorActionListener { v, actionId, event ->
@@ -430,8 +443,11 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun enableEditing(et: EditText) {
-        et.isFocusableInTouchMode = true
-        et.isCursorVisible = true
+        ViewUtils.setViewEnabled(et, true)
+    }
+
+    private fun enableEditingAndOpenKeyboard(et: EditText){
+        enableEditing(et)
         et.requestFocus()
         et.setSelection(et.text.length)
 
@@ -441,9 +457,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun disableEditing(et: EditText){
-        et.isCursorVisible = false
-        et.isFocusableInTouchMode = false
-        et.isFocusable = false
+        ViewUtils.setViewEnabled(et, false)
     }
 
     private fun closeKeyboard(v : EditText){

@@ -9,6 +9,7 @@ import com.app.appblocker.data.local.entities.Schedule
 import com.app.appblocker.databinding.ActivityScheduleBinding
 import com.app.appblocker.enums.DaysOfWeek
 import com.app.appblocker.utils.Utils
+import com.app.appblocker.utils.ViewUtils
 import com.app.appblocker.view_models.ScheduleViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -40,6 +41,22 @@ class ScheduleActivity : AppCompatActivity() {
         val active = intent.getIntExtra("active", -1)
         if(active != -1 && active == 1){
             binding.mbSave.visibility = View.GONE
+            ViewUtils.setVisibility(binding.bannerWarning.tvActiveWarning, true)
+
+            ViewUtils.setViewReadOnly(binding.chipAllDays, true)
+            ViewUtils.setViewReadOnly(binding.chipMonday, true)
+            ViewUtils.setViewReadOnly(binding.chipTuesday, true)
+            ViewUtils.setViewReadOnly(binding.chipWednesday, true)
+            ViewUtils.setViewReadOnly(binding.chipThursday, true)
+            ViewUtils.setViewReadOnly(binding.chipFriday, true)
+            ViewUtils.setViewReadOnly(binding.chipSaturday, true)
+            ViewUtils.setViewReadOnly(binding.chipSunday, true)
+
+            ViewUtils.setViewReadOnly(binding.sAllDay, true)
+            ViewUtils.setViewEnabled(binding.mbScheduleHourFrom, false)
+            ViewUtils.setViewEnabled(binding.mbScheduleHourTo, false)
+        }else{
+            ViewUtils.setVisibility(binding.bannerWarning.tvActiveWarning, false)
         }
 
         binding.ibBack.setOnClickListener {

@@ -46,6 +46,10 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <include
+            android:id="@+id/banner_warning"
+            layout="@layout/layout_profile_active_warning" />
+
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="100sp"
