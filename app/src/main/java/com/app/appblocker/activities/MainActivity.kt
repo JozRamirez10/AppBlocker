@@ -18,6 +18,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.appblocker.adapters.ProfileAdapter
 import com.app.appblocker.databinding.ActivityMainBinding
+import com.app.appblocker.utils.ActivityUtils
 import com.app.appblocker.utils.Utils
 import com.app.appblocker.view_models.ProfileViewModel
 import kotlinx.coroutines.launch
@@ -106,11 +107,7 @@ class MainActivity : AppCompatActivity() {
             message = "Are you sure you want to delete this profile?"
         )
 
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
-                moveTaskToBack(true)
-            }
-        })
+        ActivityUtils.setMinimizeOnBack(this)
     }
 
     private fun goProfile(profileId : Int? = null) {

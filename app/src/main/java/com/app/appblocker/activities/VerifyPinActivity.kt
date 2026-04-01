@@ -6,6 +6,7 @@ import android.text.InputType
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.app.appblocker.databinding.ActivityVerifyPinBinding
+import com.app.appblocker.utils.ActivityUtils
 import com.app.appblocker.utils.PinManager
 
 class VerifyPinActivity : AppCompatActivity() {
@@ -22,6 +23,7 @@ class VerifyPinActivity : AppCompatActivity() {
 
         if(mode != "reconfig"){
             binding.ibBack.visibility = View.GONE
+            ActivityUtils.setMinimizeOnBack(this)
         }
 
         if(type == "PIN"){
