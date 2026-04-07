@@ -15,17 +15,17 @@
 
 ---
 ## Screenshots
-Profiles:
-<img width="750px" alt="Screenshot_20250912_181726" src="https://github.com/user-attachments/assets/1dbda5c3-3ec4-44fe-9cc2-dff357f7c1ea" />
+Profiles:<br>
+<img width="300" height="633" alt="profiles" src="https://github.com/user-attachments/assets/3a29a966-7429-46b8-bb6a-bd705baa674b" />
 
-Profile Setup:
-<img width="750px" alt="Screenshot_20250912_181802" src="https://github.com/user-attachments/assets/07ea165f-3e7f-4f5d-be8a-514b5e8ed927" />
+Profile Setup:<br>
+<img width="300" height="633" alt="profile_setup" src="https://github.com/user-attachments/assets/f378689c-a477-4aea-97de-93f88396802b" />
 
-Schedule Setup:
-<img width="750px" alt="Screenshot_20250912_181817" src="https://github.com/user-attachments/assets/ac8220e2-d6ca-462b-9163-44270151ff0f" />
+Schedule Setup:<br>
+<img width="300" height="633" alt="schedule_setup" src="https://github.com/user-attachments/assets/87b28ecd-ee8e-4820-bf13-1ce918e67ca4" />
 
-App Blocked:
-<img width="750px" alt="Screenshot_20250912_181830" src="https://github.com/user-attachments/assets/a041b176-80fa-491e-9777-bb282271dc1f" />
+App Blocked:<br>
+<img width="300" height="633" alt="app_blocked" src="https://github.com/user-attachments/assets/1580e4cb-309b-47f5-83fe-6c9c7a7c997b" />
 
 ---
 ## Usage
